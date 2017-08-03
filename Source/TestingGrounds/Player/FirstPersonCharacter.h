@@ -54,11 +54,15 @@ public:
 	FVector GunOffset;
 
 	
-
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint32 bUsingMotionControllers : 1;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<class AGun> GunBlueprint;
+
+private:
+	AGun * Gun;
 protected:
 	
 	/** Resets HMD orientation and position in VR. */
