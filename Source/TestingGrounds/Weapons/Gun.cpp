@@ -58,22 +58,21 @@ void AGun::OnFire()
 
 			// spawn the projectile at the muzzle
 			World->SpawnActor<ABallProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			
+
 		}
 	}
 
 	// try and play the sound if specified
-	if (FireSound != NULL)
-	{
+	if (FireSound != NULL){
+
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
 
 	// try and play a firing animation if specified
-	if (FireAnimation != NULL)
-	{
-		if (AnimInstance != NULL)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
+	if (FireAnimation1P != NULL && AnimInstance1P != NULL){
+		AnimInstance1P->Montage_Play(FireAnimation1P, 1.f);
+	}
+	if (FireAnimation3P != NULL && AnimInstance3P != NULL){
+		AnimInstance3P->Montage_Play(FireAnimation3P, 1.f);
 	}
 }
