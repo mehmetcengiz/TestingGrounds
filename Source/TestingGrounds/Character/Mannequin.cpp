@@ -38,7 +38,7 @@ void AMannequin::BeginPlay()
 	Gun->AnimInstance = Mesh1P->GetAnimInstance();
 
 	if(InputComponent != NULL){
-		InputComponent->BindAction("Fire", IE_Pressed, this, &AMannequin::Fire);
+		InputComponent->BindAction("Fire", IE_Pressed, this, &AMannequin::PullTrigger);
 	}
 	
 }
@@ -57,7 +57,6 @@ void AMannequin::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	
 }
 
-void AMannequin::Fire()
-{
-	Gun->OnFire();
+void AMannequin::PullTrigger(){
+		Gun->OnFire();
 }
