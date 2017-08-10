@@ -2,6 +2,7 @@
 
 #include "TestingGrounds.h"
 #include "Tile.h"
+#include "DrawDebugHelpers.h"
 
 
 // Sets default values
@@ -24,6 +25,7 @@ void ATile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	CastSphere(GetActorLocation(), 300);
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn){
@@ -39,4 +41,23 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn)
 		Spawned->SetActorRelativeLocation(SpawnPoint);
 		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative,false));
 	}
+}
+
+bool ATile::CastSphere(FVector Location, float Radius){
+	FHitResult HitResult;
+	
+	bool HasHit = GetWorld()->SweepSingleByObjectType(
+		HitResult,
+		Location,
+		Location,
+		FQuat::Identity,
+		ECollisionChannel::ECC_Camera,
+		FCollisionShape::MakeSphere(Radius)
+	);
+
+	FColor ResultColor = HasHit ? FColor::Red : FColor::Green;
+
+	DrawDebugSphere(GetWorld(), Location, Radius, 100, ResultColor, true, 100);
+
+	return HasHit;
 }
