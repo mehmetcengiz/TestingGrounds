@@ -48,6 +48,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Word Initialize")
 	void PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn = 1, int MaxSpawn = 1,float Radius = 500, float MinScale = 1, float MaxScale = 1);
+
+	UFUNCTION(BlueprintCallable, Category = "Word Initialize")
+	void PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int MinSpawn = 1, int MaxSpawn = 1, float Radius = 500);
 	
 
 	UFUNCTION(BlueprintCallable, Category = "Pool")
@@ -60,6 +63,8 @@ private:
 	bool FindEmptyLocation(FVector& OutLocation,float Radius);
 	
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition);
+
+	void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition);
 
 	bool CanSpawnAtLocation(FVector Location, float Radius);
 
