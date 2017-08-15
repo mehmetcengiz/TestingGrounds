@@ -3,6 +3,17 @@
 #include "GameFramework/Character.h"
 #include "Mannequin.generated.h"
 
+UENUM()
+enum class EFiringState : uint8 {
+	READY,
+	FIRING,
+	NOT_READY,
+	GETTING_READY,
+	OUT_OF_AMMO,
+	RELOADING
+};
+
+
 UCLASS()
 class TESTINGGROUNDS_API AMannequin : public ACharacter
 {
@@ -43,5 +54,19 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	AGun* Gun;
+
+	void ReleaseTrigger();
+
+	UPROPERTY()
+	bool bIsPlayerShooting;
+	
+	EFiringState FiringState;
+	
+	UPROPERTY(EditdefaultsOnly, Category = "Firing")
+	float PrimaryFiringRate = 0.15;
+
+	void MakeReadyGunToNextShot();
+	void HandleFiringRate();
+	void ShootPrimary();
 
 };

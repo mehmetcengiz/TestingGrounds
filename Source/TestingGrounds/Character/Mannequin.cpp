@@ -23,6 +23,9 @@ AMannequin::AMannequin()
 	Mesh1P->CastShadow = false;
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+
+	bIsPlayerShooting = false;
+	FiringState = EFiringState::READY;
 }
 
 // Called when the game starts or when spawned
@@ -47,6 +50,8 @@ void AMannequin::BeginPlay()
 
 	if(InputComponent != NULL){
 		InputComponent->BindAction("Fire", IE_Pressed, this, &AMannequin::PullTrigger);
+		InputComponent->BindAction("Fire", IE_Released, this, &AMannequin::ReleaseTrigger);
+		
 	}
 	
 }
@@ -56,6 +61,34 @@ void AMannequin::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	if (bIsPlayerShooting && FiringState == EFiringState::READY) { ShootPrimary(); }
+
+	if (FiringState == EFiringState::NOT_READY) { MakeReadyGunToNextShot(); }
+}
+
+void AMannequin::PullTrigger() {
+	bIsPlayerShooting = true;
+}
+
+void AMannequin::ReleaseTrigger(){
+	bIsPlayerShooting = false;
+}
+
+void AMannequin::ShootPrimary() {
+	FiringState = EFiringState::NOT_READY;
+	Gun->OnFire();
+
+}
+
+//Handles firing rate.
+void AMannequin::MakeReadyGunToNextShot() {
+	FiringState = EFiringState::GETTING_READY;
+	FTimerHandle Handle;
+	GetWorld()->GetTimerManager().SetTimer(OUT Handle, this, &AMannequin::HandleFiringRate, PrimaryFiringRate, false);
+}
+
+void AMannequin::HandleFiringRate() {
+	FiringState = EFiringState::READY;
 }
 
 // Called to bind functionality to input
@@ -71,6 +104,4 @@ void AMannequin::Death(){
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint_0"));
 }
 
-void AMannequin::PullTrigger(){
-		Gun->OnFire();
-}
+
