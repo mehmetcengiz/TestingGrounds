@@ -25,6 +25,7 @@ void ATile::BeginPlay(){
 }
 
 void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason){
+	if (Pool == NULL || NavMeshBoundsVolume == NULL) { return; }
 	Pool->Return(NavMeshBoundsVolume);
 
 }
@@ -83,9 +84,9 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnP
 }
 
 void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition) {
-	APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
+	FRotator Rotation = FRotator(0, SpawnPosition.Rotation, 0);
+	APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn,SpawnPosition.Location, Rotation);
 	if (Spawned == NULL) { return; }
-	Spawned->SetActorRelativeLocation(SpawnPosition.Location);
 	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
 	Spawned->SpawnDefaultController();
